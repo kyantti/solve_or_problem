@@ -1,0 +1,26 @@
+research:
+  description: >
+    Research and compile comprehensive information about Operations Research (OR),
+    including its definition, scope, and main application areas. Investigate what
+    defines an Operations Research problem and detail the characteristics of problems
+    in each main category and subcategory.
+  expected_output: >
+    A structured set of key points and essential information about Operations Research,
+    its categories and subcategories, and defining traits of each problem type.
+  agent: researcher
+
+generate_outline:
+  description: >
+    Analyze the given problem {problem_statement} to determine if it qualifies as an Operations Research (OR) problem.
+    If it does, classify it into one of the following categories or subcategories:
+      - Linear Programming, which includes Integer Programming
+      - Network Flow, which divides into Maximum Flow and Minimum Cost Flow
+    Justify the classification with a brief explanation.
+    
+  expected_output: >
+    A problem classification result with the following fields:
+      - is_operations_research_problem (true/false)
+      - category (if applicable)
+      - subcategory (if applicable)
+      - explanation (brief reasoning for the classification)
+  agent: outliner

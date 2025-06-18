@@ -1,0 +1,49 @@
+analyze_problem:
+  description: >
+    Analyze the given natural language description of the given linear programming (LP) problem: {problem_statement}. 
+    Identify the key components such as decision variables, objective function, and constraints.
+  expected_output: >
+    A summary of the LP problem with identified decision variables, type of optimization 
+    (maximize or minimize), and a bullet list of all constraints as described in natural language.
+  agent: lp_data_extractor
+
+extract_variables:
+  description: >
+    From the analyzed LP problem, extract all decision variables, give them a name (e.g., ['x', 'y']) and their types (NUM, INT, BIN).
+  expected_output: >
+    A set of decision variables, that includes:
+      - variable names (e.g., ['x1', 'x2'])
+      - variable types (e.g., NUM, INT, BIN)
+  agent: lp_data_extractor
+
+extract_objective_function:
+  description: >
+    Extract the objective function from the problem. Identify whether it's a maximization or 
+    minimization problem and extract all terms involved with their coefficients and variable names.
+  expected_output: >
+    An objective function that includes:
+      - type (maximize or minimize)
+      - terms (a list of tuples with coefficient and variable name)
+  agent: lp_data_extractor
+  
+extract_constraints:
+  description: >
+    Extract all constraints from the problem. Each constraint should be represented with its 
+    left-hand side (LHS) expression, operator (e.g., <=, >=, =), and right-hand side (RHS) value.
+  expected_output: >
+    A list of constraints, where each constraint is represented as a dictionary with:
+      - lhs (a list of tuples with coefficient and variable name)
+      - operator (e.g., <=, >=, =)
+      - rhs (the right-hand side value)
+  agent: lp_data_extractor
+
+assemble_lp_problem:
+  description: >
+    Assemble the extracted components into a structured representation of the LP problem.
+    This includes decision variables, objective function, and constraints.
+  expected_output: >
+    A structured LP problem representation with:
+      - decision variables (list of variable names and types)
+      - objective function (type and terms)
+      - constraints (list of constraints)
+  agent: lp_problem_model_assembler
