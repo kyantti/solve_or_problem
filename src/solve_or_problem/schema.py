@@ -40,12 +40,20 @@ class ObjectiveFunction(BaseModel):
     type: Literal["maximize", "minimize"] = Field(..., description="Optimization direction")
     terms: List[LinearExpressionTerm] = Field(..., description="Terms in the objective function")
 
+class LpProblemSolution(BaseModel):
+    """Model for the solution of a linear programming problem."""
+    optimal_variable_values: Dict[str, float] = Field(..., description="Optimal values for each variable (e.g., {'x': 6.0, 'y': 4.0})")
+    optimal_objective_value: float = Field(..., description="Optimal value of the objective function")
 
 class LinearProgrammingComponents(BaseModel):
     """Complete model for LP/IP problems with structured expressions."""
     decision_variables: DecisionVariables
     constraints: Constraints
     objective_function: ObjectiveFunction
+    solution: Optional[LpProblemSolution] = Field(
+        default=None,
+        description="Not populated until the problem is solved"
+    )
 
 # Models for Network Flow Problems
 class Node(BaseModel):

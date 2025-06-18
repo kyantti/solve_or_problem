@@ -7,9 +7,10 @@ from pydantic import BaseModel, Field
 
 from crewai.flow import Flow, listen, start, router
 from crewai.agent import Agent, Task
-from solve_or_problem.schema import ProblemClassificationResult, SolutionResult, LinearProgrammingComponents,  ProblemModel
+from solve_or_problem.schema import ProblemClassificationResult, SolutionResult, LinearProgrammingComponents,  ProblemModel, LpProblemSolution
 from solve_or_problem.crews.outline_problem_crew.outline_crew import OutlineCrew
 from solve_or_problem.crews.lp_problem_modeling_crew.lp_problem_modeling_crew import LpProblemModelingCrew
+from solve_or_problem.crews.lp_problem_solving_crew.lp_problem_solving_crew import LpProblemSolvingCrew
 class OrProblemState(BaseModel):
     """State for the OR Problem Crew"""
 
@@ -91,7 +92,7 @@ class OrProblemFlow(Flow[OrProblemState]):
 
         query = (
             f"Select the appropriate data extractor abbreviation based on the problem outline: {self.state.problem_outline} from a set of predefined abbreviations."
-            "If the problem is a Linear Programming problem, return 'LP'."
+            "If the problem is a Linear Programming problem or any subcategory of it, as Integer Programming, return 'LP'."
             "If it's a Network Flow problem, return 'NF'."
             "Return 'None' if the problem is not an operations research problem."
             "Return only the abbreviation that best matches."
@@ -140,9 +141,24 @@ class OrProblemFlow(Flow[OrProblemState]):
     def lp_problem_solver(self):
         """Handle the case where the problem is a Linear Programming problem."""
         print("Linear Programming Problem Solver selected.")
-        
-        
 
+        result = (
+            LpProblemSolvingCrew()
+            .crew()
+            .kickoff(inputs={"problem_model": self.state.problem_model.model_dump_json()})
+        )
+        
+        optimal_variable_values = result["optimal_variable_values"]
+        optimal_objective_value = result["optimal_objective_value"]
+
+        if isinstance(self.state.problem_model.components, LinearProgrammingComponents):
+            self.state.problem_model.components.solution = LpProblemSolution(
+                optimal_variable_values=optimal_variable_values,
+                optimal_objective_value=optimal_objective_value
+            )
+        
+        print(f"Linear Programming Solution: {self.state.problem_model}")
+        
 
     @listen("NF")
     def network_flow_problem_modeling(self):

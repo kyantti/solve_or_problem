@@ -3,7 +3,8 @@ from crewai.project import CrewBase, agent, crew, task
 from crewai.agents.agent_builder.base_agent import BaseAgent
 from typing import List
 from dotenv import load_dotenv
-from solve_or_problem.tools import lp_problem_solver_tool
+from solve_or_problem.tools.lp_problem_solver_tool import LpProblemSolverTool
+from solve_or_problem.schema import LpProblemSolution
 # If you want to run a snippet of code before or after the crew starts,
 # you can use the @before_kickoff and @after_kickoff decorators
 # https://docs.crewai.com/concepts/crews#example-crew-class-with-decorators
@@ -27,33 +28,20 @@ class LpProblemSolvingCrew():
     def solver(self) -> Agent:
         return Agent(
             config=self.agents_config['solver'], # type: ignore[index]
-            tools=lp_problem_solver_tool,
+            tools=[LpProblemSolverTool()],
             verbose=True
         )
-
-    @agent
-    def reporting_analyst(self) -> Agent:
-        return Agent(
-            config=self.agents_config['reporting_analyst'], # type: ignore[index]
-            verbose=True
-        )
-
+    
     # To learn more about structured task outputs,
     # task dependencies, and task callbacks, check out the documentation:
     # https://docs.crewai.com/concepts/tasks#overview-of-a-task
     @task
-    def research_task(self) -> Task:
+    def solve_lp_problem(self) -> Task:
         return Task(
-            config=self.tasks_config['research_task'], # type: ignore[index]
+            config=self.tasks_config['solve_lp_problem'], # type: ignore[index]
+            output_pydantic=LpProblemSolution, # type: ignore[index]
         )
-
-    @task
-    def reporting_task(self) -> Task:
-        return Task(
-            config=self.tasks_config['reporting_task'], # type: ignore[index]
-            output_file='report.md'
-        )
-
+    
     @crew
     def crew(self) -> Crew:
         """Creates the LpProblemSolvingCrew crew"""
