@@ -126,6 +126,12 @@ class NetworkFlowProblem(BaseModel):
         None,
         description="Sink node ID for max flow problems (where flow terminates)"
     )
+    
+    # Add solution field to store results directly
+    solution: Optional["NetworkFlowSolution"] = Field(
+        None,
+        description="Solution to the network flow problem"
+    )
 
 class ArcFlow(BaseModel):
     """Represents the flow on a single arc in the solution."""

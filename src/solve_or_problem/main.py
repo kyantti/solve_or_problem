@@ -265,13 +265,19 @@ class OrProblemFlow(Flow[OrProblemState]):
         min_cost_flow_solution = result["min_cost_flow_solution"]
         solution_summary = result["solution_summary"]
 
-        if isinstance(self.state.problem_model.components, SolutionResult):
-            self.state.problem_model.components.flow_solution = NetworkFlowSolution(
+        if isinstance(self.state.problem_model.components, NetworkFlowProblem):
+            # Create the NetworkFlowSolution object
+            network_flow_solution = NetworkFlowSolution(
                 problem_type=problem_type,
                 max_flow_solution=max_flow_solution,
                 min_cost_flow_solution=min_cost_flow_solution,
                 solution_summary=solution_summary
             )
+            
+            # Store the solution in the components attribute
+            self.state.problem_model.components.solution = network_flow_solution
+            
+            print(f"[DEBUG] Network Flow Solution stored: {network_flow_solution}")
         else:
             print("Error: The problem model does not contain a valid NetworkFlowProblem component.")
             return
