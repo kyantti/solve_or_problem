@@ -1,0 +1,80 @@
+interpret_graph_image:
+  description: >
+    Analyze the provided network flow graph image: {graph_image}. 
+    Extract key visual information such as nodes (locations, junctions), arcs (connections, flows),
+    directional indicators, capacity values, cost values, and any special nodes like source or sink.
+    Identify node labels, colors, shapes, and the overall structure of the graph.
+    Create a detailed textual representation of the graph based on what is visible in the image.
+  expected_output: >
+    A comprehensive description of the graph structure including identified nodes, arcs,
+    capacities, costs, directions, and any special markings or visual cues that provide information
+    about the network flow problem represented in the image.
+  agent: nf_data_extractor
+
+analyze_network_problem:
+  description: >
+    Analyze the given natural language description of the network flow problem: {problem_statement} 
+    and the interpretation of the graph image if available.
+    Identify the key components such as nodes (locations, junctions), arcs (connections, flows), 
+    capacities, and any costs or constraints associated with the network.
+    Combine the textual problem description with the graph interpretation to form a complete understanding
+    of the problem.
+  expected_output: >
+    A summary of the network flow problem with identified entities, relationships,
+    and a preliminary assessment of the problem type (max flow or min cost flow),
+    including information extracted from both the text description and graph interpretation if available.
+  agent: nf_data_extractor
+
+identify_problem_type:
+  description: >
+    Based on the analyzed network problem and the visual graph structure (if image is provided),
+    determine whether it's a Maximum Flow problem or a Minimum Cost Flow problem.
+    Maximum flow problems focus on finding the maximum amount that can flow from 
+    source to sink, while minimum cost flow problems involve finding the cheapest 
+    way to send flow through a network with supply and demand nodes.
+  expected_output: >
+    A determination of the problem type (either "maxflow" or "mincostflow") with justification
+    for the classification, incorporating evidence from the textual description and graph imagery if available.
+  agent: nf_data_extractor
+
+extract_nodes:
+  description: >
+    From the analyzed network problem and graph image (if provided), extract all nodes in the network. For each node, determine:
+    - A unique ID (integer)
+    - Supply/demand value (if applicable for min cost flow)
+    - Whether it's a source or sink node (if applicable for max flow)
+    - Any descriptive label or additional metadata
+    - Visual position/coordinates from the image (if available)
+  expected_output: >
+    A list of nodes with their properties, properly identified as source/sink for max flow problems
+    or with appropriate supply/demand values for min cost flow problems, including visual information
+    extracted from the graph image when available.
+  agent: nf_data_extractor
+
+extract_arcs:
+  description: >
+    Extract all arcs in the network from the problem description and graph image (if provided). For each arc, determine:
+    - Source node ID
+    - Target node ID
+    - Capacity (maximum flow allowed)
+    - Unit cost (if applicable for min cost flow)
+    - Any descriptive label
+    - Visual representation details from the image (if available, e.g., style, direction indicators)
+  expected_output: >
+    A list of arcs with their properties, including capacities for all arcs and costs
+    for min cost flow problems, incorporating information from the visual graph representation when available.
+  agent: nf_data_extractor
+
+assemble_network_model:
+  description: >
+    Assemble the extracted components from the textual description and graph image (if provided) into a 
+    structured representation of the network flow problem.
+    This includes the problem type, nodes, arcs, and appropriate source/sink or supply/demand values.
+    Ensure the model is consistent and properly represents the original problem.
+  expected_output: >
+    A structured network flow problem representation with:
+    - Problem type (maxflow or mincostflow)
+    - Nodes list with appropriate properties
+    - Arcs list with capacities and costs
+    - Source and sink nodes for max flow problems
+  agent: nf_problem_model_assembler

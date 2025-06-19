@@ -1,0 +1,8 @@
+solve_nf_problem:
+  description: >
+    Solve the network flow problem using the provided structured components from {problem_model}.
+    Use the Network Flow Solver Tool to find the optimal solution based on the problem type (maximum flow or minimum cost flow).
+  expected_output: >
+    A NetworkFlowSolution containing either a MaxFlowSolution or MinCostFlowSolution based on the problem type,
+    including information about optimal flow values and detailed flow distribution through the network.
+  agent: solver
