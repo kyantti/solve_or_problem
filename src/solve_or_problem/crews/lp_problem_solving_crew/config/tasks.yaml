@@ -1,0 +1,7 @@
+solve_lp_problem:
+  description: >
+    Solve the linear programming problem using the provided structured components from {problem_model}.
+    Use the Linear Programming Solver Tool to find the optimal solution.
+  expected_output: >
+    A Linear Programming solution containing the optimal values for each variable and optimal value of the objective function.
+  agent: solver
