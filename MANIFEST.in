@@ -1,0 +1,10 @@
+include README.md
+include pyproject.toml
+recursive-include src/solve_or_problem *.py
+recursive-include src/solve_or_problem *.yaml
+recursive-include src/solve_or_problem *.yml
+recursive-include src/solve_or_problem/crews */config/*.yaml
+recursive-include src/solve_or_problem/crews */config/*.yml
+exclude **/__pycache__
+exclude **/*.pyc
+exclude **/*.pyo

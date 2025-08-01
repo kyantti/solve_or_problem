@@ -1,56 +1,193 @@
-# {{crew_name}} Crew
+# Operations Research Problem Solver
 
-Welcome to the {{crew_name}} Crew project, powered by [crewAI](https://crewai.com). This template is designed to help you set up a multi-agent AI system with ease, leveraging the powerful and flexible framework provided by crewAI. Our goal is to enable your agents to collaborate effectively on complex tasks, maximizing their collective intelligence and capabilities.
+An intelligent multi-agent system powered by [crewAI](https://crewai.com) that automatically classifies, models, and solves operations research problems using natural language descriptions. The system leverages AI agents to analyze problem statements, determine the appropriate optimization technique, and provide complete solutions.
+
+## Features
+
+🤖 **Intelligent Problem Classification**: Automatically identifies if a problem belongs to operations research and categorizes it
+📊 **Multi-Problem Support**: Handles Linear Programming (LP) and Network Flow (NF) problems
+🔄 **Automated Workflow**: Complete end-to-end pipeline from problem statement to solution
+⚡ **Google OR-Tools Integration**: Uses industry-standard optimization solvers
+🎯 **Structured Output**: Provides detailed solutions with optimal values and explanations
+
+## Supported Problem Types
+
+### Linear Programming (LP)
+- Resource allocation problems
+- Production planning
+- Diet problems
+- Transportation problems
+- Integer Programming variants
+
+### Network Flow (NF)
+- Maximum flow problems
+- Minimum cost flow problems
+- Transportation networks
+- Supply chain optimization
 
 ## Installation
 
-Ensure you have Python >=3.10 <3.14 installed on your system. This project uses [UV](https://docs.astral.sh/uv/) for dependency management and package handling, offering a seamless setup and execution experience.
+### Install from Source
 
-First, if you haven't already, install uv:
+Ensure you have Python >=3.10 <3.14 installed on your system.
+
+#### Using pip:
+```bash
+git clone https://github.com/kyantti/solve_or_problem.git
+cd solve_or_problem
+pip install -e .
+```
+
+#### Using UV (recommended for development):
+This project uses [UV](https://docs.astral.sh/uv/) for dependency management.
+
+First, install uv if you haven't already:
 
 ```bash
 pip install uv
 ```
 
-Next, navigate to your project directory and install the dependencies:
+Then install the project:
+```bash
+git clone https://github.com/kyantti/solve_or_problem.git
+cd solve_or_problem
+uv sync
+```
 
-(Optional) Lock the dependencies and install them by using the CLI command:
+#### Using crewAI CLI:
 ```bash
 crewai install
 ```
 
-### Customizing
+### Development Installation
 
-**Add your `OPENAI_API_KEY` into the `.env` file**
+For development with optional dependencies:
 
-- Modify `src/or_flow/config/agents.yaml` to define your agents
-- Modify `src/or_flow/config/tasks.yaml` to define your tasks
-- Modify `src/or_flow/crew.py` to add your own logic, tools and specific args
-- Modify `src/or_flow/main.py` to add custom inputs for your agents and tasks
+```bash
+pip install -e ".[dev]"
+```
+
+Or with UV:
+```bash
+uv sync --group dev
+```
+
+### Environment Setup
+
+**Add your `OPENAI_API_KEY` to the `.env` file:**
+
+```bash
+OPENAI_API_KEY=your_openai_api_key_here
+```
 
 ## Running the Project
 
-To kickstart your flow and begin execution, run this from the root folder of your project:
+### Command Line Interface
+
+After installation, you can use the package from anywhere:
+
+```bash
+solve-or-problem
+```
+
+Or alternatively:
+```bash
+or-solver
+```
+
+### From Source
+
+To solve an operations research problem, run:
 
 ```bash
 crewai run
 ```
 
-This command initializes the or-flow Flow as defined in your configuration.
+Or directly:
+```bash
+python -m solve_or_problem.main
+```
 
-This example, unmodified, will run the create a `report.md` file with the output of a research on LLMs in the root folder.
+### Programmatic Usage
 
-## Understanding Your Crew
+You can also use the package in your Python code:
 
-The or-flow Crew is composed of multiple AI agents, each with unique roles, goals, and tools. These agents collaborate on a series of tasks, defined in `config/tasks.yaml`, leveraging their collective skills to achieve complex objectives. The `config/agents.yaml` file outlines the capabilities and configurations of each agent in your crew.
+```python
+from solve_or_problem.main import OrProblemFlow
 
-## Support
+# Create and run the flow
+flow = OrProblemFlow()
+flow.kickoff()
+```
 
-For support, questions, or feedback regarding the {{crew_name}} Crew or crewAI.
+### Example Problems
 
-- Visit our [documentation](https://docs.crewai.com)
-- Reach out to us through our [GitHub repository](https://github.com/joaomdmoura/crewai)
-- [Join our Discord](https://discord.com/invite/X4JWnZnxPb)
-- [Chat with our docs](https://chatg.pt/DWjSBZn)
+The system comes with two example problems:
 
-Let's create wonders together with the power and simplicity of crewAI.
+#### 1. Tailor Production Problem (Linear Programming)
+A resource allocation problem where a tailor needs to optimize fabric usage for suits, jackets, and trousers to maximize profit.
+
+#### 2. Network Flow Problem
+A maximum flow problem in a transportation network with capacity constraints.
+
+## System Architecture
+
+The system uses a multi-agent flow with the following crews:
+
+### 1. Outline Problem Crew
+- **Research Agent**: Gathers information about operations research
+- **Problem Classifier**: Determines if the problem is OR-related and categorizes it
+
+### 2. Problem Modeling Crews
+- **LP Problem Modeling Crew**: Extracts decision variables, constraints, and objective functions for linear programming problems
+- **NF Problem Modeling Crew**: Identifies nodes, arcs, and network structure for flow problems
+
+### 3. Problem Solving Crews
+- **LP Problem Solving Crew**: Solves linear programming problems using OR-Tools GLOP solver
+- **NF Problem Solving Crew**: Solves network flow problems using OR-Tools network flow algorithms
+
+## Project Structure
+
+```
+src/solve_or_problem/
+├── main.py                     # Main flow orchestration
+├── schema.py                   # Data models and schemas
+├── crews/                      # AI agent crews
+│   ├── outline_problem_crew/   # Problem classification
+│   ├── lp_problem_modeling_crew/  # LP problem modeling
+│   ├── nf_problem_modeling_crew/  # Network flow modeling
+│   ├── lp_problem_solving_crew/   # LP solving
+│   └── nf_problem_solving_crew/   # Network flow solving
+└── tools/                      # OR-Tools integration
+    ├── lp_problem_solver_tool.py   # Linear programming solver
+    └── nf_problem_solver_tool.py   # Network flow solver
+```
+
+## Customization
+
+To solve your own problems:
+
+1. **Modify Problem Statement**: Edit the `problem_statement` variable in `src/solve_or_problem/main.py`
+2. **Customize Agents**: Update configuration files in `crews/*/config/agents.yaml`
+3. **Adjust Tasks**: Modify task definitions in `crews/*/config/tasks.yaml`
+4. **Extend Problem Types**: Add new crews for additional OR problem categories
+
+## Dependencies
+
+- **crewAI**: Multi-agent orchestration framework
+- **Google OR-Tools**: Optimization solver library
+- **Pydantic**: Data validation and settings management
+- **Matplotlib/Plotly**: Visualization capabilities
+
+## Flow Visualization
+
+Generate a visual representation of the agent workflow:
+
+```bash
+or-plot
+```
+
+Or from Python:
+```bash
+python -c "from solve_or_problem.main import plot; plot()"
+```

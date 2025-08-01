@@ -1,24 +1,129 @@
 [project]
-name = "solve_or_problem"
+name = "solve-or-problem"
 version = "0.1.0"
-description = "solve-or-problem using crewAI"
+description = "An intelligent multi-agent system for solving operations research problems using crewAI and OR-Tools"
+readme = "README.md"
+license = { text = "MIT" }
 authors = [{ name = "Your Name", email = "you@example.com" }]
+maintainers = [{ name = "Your Name", email = "you@example.com" }]
 requires-python = ">=3.10,<3.14"
+keywords = ["operations-research", "optimization", "linear-programming", "network-flow", "crewai", "or-tools", "ai-agents"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: Mathematics",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
 dependencies = [
     "crewai[tools]>=0.130.0,<1.0.0",
     "matplotlib>=3.10.3",
     "ortools>=9.12.4544",
     "plotly>=6.1.2",
+    "pydantic>=2.0.0",
 ]
 
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "black>=23.0.0",
+    "isort>=5.12.0",
+    "flake8>=6.0.0",
+    "mypy>=1.0.0",
+]
+test = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/kyantti/solve_or_problem"
+Documentation = "https://github.com/kyantti/solve_or_problem#readme"
+Repository = "https://github.com/kyantti/solve_or_problem.git"
+"Bug Tracker" = "https://github.com/kyantti/solve_or_problem/issues"
+
 [project.scripts]
-kickoff = "solve_or_problem.main:kickoff"
-run_crew = "solve_or_problem.main:kickoff"
-plot = "solve_or_problem.main:plot"
+solve-or-problem = "solve_or_problem.main:kickoff"
+or-solver = "solve_or_problem.main:kickoff"
+or-plot = "solve_or_problem.main:plot"
 
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/solve_or_problem"]
+include = [
+    "src/solve_or_problem/**/*.py",
+    "src/solve_or_problem/**/*.yaml",
+    "src/solve_or_problem/**/*.yml",
+]
+
+[tool.hatch.build.targets.wheel.force-include]
+"src/solve_or_problem" = "solve_or_problem"
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "/src",
+    "/tests",
+    "/README.md",
+    "/LICENSE",
+    "/pyproject.toml",
+    "/MANIFEST.in",
+]
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+# Testing configuration
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = "test_*.py"
+python_classes = "Test*"
+python_functions = "test_*"
+addopts = "-v --tb=short"
+
+# Code formatting
+[tool.black]
+line-length = 88
+target-version = ['py310']
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+  # directories
+  \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | build
+  | dist
+)/
+'''
+
+# Import sorting
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+line_length = 88
+known_first_party = ["solve_or_problem"]
+
+# Type checking
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+ignore_missing_imports = true
 
 [tool.crewai]
 type = "flow"
